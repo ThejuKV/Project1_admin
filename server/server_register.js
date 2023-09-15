@@ -47,8 +47,37 @@ app.post('/api/postdataregister', (req, res) => {
     }
   });
 
-  // res.status(200).json({ message: 'Data received successfully' });
+  
 });
+
+// Create a new route to retrieve data from the database
+app.get('/api/getfields', (req, res) => {
+  db.query('SELECT * FROM user_fields_register', (err, results) => {
+    if (err) {
+      console.error('Error fetching data from MySQL:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      console.log('Data retrieved from MySQL');
+
+      const fieldsArray = []; 
+
+      
+      results.forEach((row) => {
+        const fieldObject = {
+          label: row.label, 
+          inputType: row.field,
+        };
+
+        
+        fieldsArray.push(fieldObject);
+      });
+
+      
+      res.status(200).json(fieldsArray);
+    }
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
