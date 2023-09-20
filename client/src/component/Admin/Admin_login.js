@@ -2,14 +2,11 @@ import React, { useState,useEffect } from 'react';
 import './Admin.css';
 
 const inputTypes = [
-  // { type: 'button', label: 'Button' },
-  // { type: 'checkbox', label: 'Checkbox' },
   { type: 'text', label: 'Text' },
   { type: 'date', label: 'Date' },
   { type: 'number', label: 'Number' },
   { type: 'email', label: 'Email' },
   { type: 'tel', label: 'Telephone' },
-  // { type: 'submit', label: 'Submit' },
   { type: 'password', label: 'Password' },
   { type: 'week', label: 'Week' },
   { type: 'time', label: 'Time' },
@@ -25,6 +22,7 @@ const Admin_login = () => {
   const [InputData, setInputData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [checkboxStatus, setCheckboxStatus] = useState({});
 
 
   const handleSubmit = async (e) => {
@@ -60,16 +58,16 @@ const Admin_login = () => {
     }
   };
 
+
+
+//To handle the delete button
   const handleDelete = async (userID) => {
-    // const user_id = e.target.dataset.userid;
-  
     try {
       const response = await fetch(`http://localhost:8082/api/deleteRow/${userID}`, {
         method: 'DELETE',
       });
   
       if (response.status === 204) {
-        // Row deleted successfully from the server, update the front end
         setInputData((prevData) => prevData.filter((item) => item.userID !== userID));
       } else {
         alert('Error deleting data');
@@ -91,15 +89,68 @@ const Admin_login = () => {
         setIsLoading(false); 
         console.log(data);
         setInputData(data);
+
+
+        //checkbox function
+        const initialCheckboxStatus = {};
+        data.forEach((item) => {
+          initialCheckboxStatus[item.userID] = item.checkbox === 1; 
+        });
+        setCheckboxStatus(initialCheckboxStatus);
+
+        data.forEach((item) => {
+          fetch(`http://localhost:8082/api/getCheckboxStatusLogin/${item.userID}`)
+            .then((response) => response.json())
+            .then((result) => {
+              const updatedCheckboxStatus = { ...checkboxStatus };
+              updatedCheckboxStatus[item.userID] = result.checkbox === 1;
+              setCheckboxStatus(updatedCheckboxStatus);
+            })
+            .catch((error) => {
+              console.error('Error fetching checkbox status:', error);
+            });
+        });
+
       })
       .catch((error) => {
-        setError(error); // Set error state if there's an error
-        setIsLoading(false); // Set loading state to false
+        setError(error); 
+        setIsLoading(false); 
       });
   }, []);
 
 
 
+  //Handle the checkbox
+  const handleCheckboxClick = async (userID) => {
+    const newCheckboxStatus = {
+      ...checkboxStatus,
+      [userID]: !checkboxStatus[userID], 
+    };
+
+    setCheckboxStatus(newCheckboxStatus);
+
+    try {
+      const response = await fetch(`http://localhost:8082/api/updateCheckboxLogin/${userID}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ checkbox: newCheckboxStatus[userID] ? 1 : 0 }),
+      });
+
+      if (response.status !== 200) {
+        alert('Error updating checkbox status');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while updating checkbox status');
+    }
+  };
+
+
+
+
+  //Frontend part
   return (
     <div>
       <h1>
@@ -161,7 +212,7 @@ const Admin_login = () => {
       
         {InputData.map((item) => (
   <div  key={item.id}>
-    <input type="checkbox" className='checkbox-enlarge'/>
+    <input type="checkbox" className='checkbox-enlarge' checked={checkboxStatus[item.userID]} onChange={() => handleCheckboxClick(item.userID)}/>
     <label htmlFor={item.Label}>{item.label}:</label>
     {item.inputType === 'date' ? (
       <input

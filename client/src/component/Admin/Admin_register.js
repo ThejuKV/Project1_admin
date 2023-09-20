@@ -23,6 +23,8 @@ const Admin_register = () => {
   const [InputData, setInputData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [checkboxStatus, setCheckboxStatus] = useState({});
+
 
 
   //To handle the submit button
@@ -60,6 +62,7 @@ const Admin_register = () => {
 
 
 
+
   //To handle the delete button
   const handleDelete = async (userID) => {
   
@@ -81,6 +84,7 @@ const Admin_register = () => {
   };
   
 
+
   // Fetch data from the backend 
   useEffect(() => {
     fetch('http://localhost:8084/api/getfields')
@@ -90,12 +94,65 @@ const Admin_register = () => {
         setIsLoading(false); 
         console.log(data);
         setInputData(data);
+
+
+        //checkbox function
+        const initialCheckboxStatus = {};
+        data.forEach((item) => {
+          initialCheckboxStatus[item.userID] = item.checkbox === 1; // Assuming 1 is checked and 0 is unchecked
+        });
+        setCheckboxStatus(initialCheckboxStatus);
+
+        data.forEach((item) => {
+          fetch(`http://localhost:8084/api/getCheckboxStatusRegister/${item.userID}`)
+            .then((response) => response.json())
+            .then((result) => {
+              const updatedCheckboxStatus = { ...checkboxStatus };
+              updatedCheckboxStatus[item.userID] = result.checkbox === 1;
+              setCheckboxStatus(updatedCheckboxStatus);
+            })
+            .catch((error) => {
+              console.error('Error fetching checkbox status:', error);
+            });
+        });
+
       })
       .catch((error) => {
         setError(error); 
         setIsLoading(false); 
       });
   }, []);
+
+
+
+
+//Handle the checkbox
+  const handleCheckboxClick = async (userID) => {
+    const newCheckboxStatus = {
+      ...checkboxStatus,
+      [userID]: !checkboxStatus[userID], 
+    };
+
+    setCheckboxStatus(newCheckboxStatus);
+
+    try {
+      const response = await fetch(`http://localhost:8084/api/updateCheckboxRegister/${userID}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ checkbox: newCheckboxStatus[userID] ? 1 : 0 }),
+      });
+
+      if (response.status !== 200) {
+        alert('Error updating checkbox status');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while updating checkbox status');
+    }
+  };
+
 
 
 
@@ -160,21 +217,21 @@ const Admin_register = () => {
       
         {InputData.map((item) => (
   <div  key={item.id}>
-    <input type="checkbox" className='checkbox-enlarge'/>
+    <input type="checkbox" className='checkbox-enlarge' checked={checkboxStatus[item.userID]} onChange={() => handleCheckboxClick(item.userID)}/>
     <label htmlFor={item.Label}>{item.label}:</label>
     {item.inputType === 'date' ? (
       <input
         type="date"
         id={item.Label}
         name={item.Label}
-        // value={item.label} // Set the input value
+        
       />
     ) : item.inputType === 'text' ? (
       <input
         type="text"
         id={item.Label}
         name={item.Label}
-         // Set the input value
+        
       />
     ) : item.inputType === 'number' ? (
       <input
@@ -232,7 +289,7 @@ const Admin_register = () => {
         type={item.inputType}
         id={item.Label}
         name={item.Label}
-        // value={item.label} // Set the input value
+        
       />
     )}
     <div >
