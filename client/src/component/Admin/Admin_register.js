@@ -1,21 +1,20 @@
 import React, { useState ,useEffect} from 'react';
 import './Admin.css';
 
+
 const inputTypes = [
-  // { type: 'button', label: 'Button' },
-  // { type: 'checkbox', label: 'Checkbox' },
   { type: 'text', label: 'Text' },
   { type: 'date', label: 'Date' },
   { type: 'number', label: 'Number' },
   { type: 'email', label: 'Email' },
   { type: 'tel', label: 'Telephone' },
-  // { type: 'submit', label: 'Submit' },
   { type: 'week', label: 'Week' },
   { type: 'time', label: 'Time' },
   { type: 'file', label: 'File' },
   { type: 'password', label: 'Password' },
   { type: 'datetime', label: 'DateTime' }
 ];
+
 
 const Admin_register = () => {
   const [selectedlabel, setSelectedlabel] = useState('');
@@ -26,6 +25,7 @@ const Admin_register = () => {
   const [error, setError] = useState(null);
 
 
+  //To handle the submit button
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -57,24 +57,49 @@ const Admin_register = () => {
       alert('An error occurred while submitting data');
     }
   };
+
+
+
+  //To handle the delete button
+  const handleDelete = async (userID) => {
+  
+    try {
+      const response = await fetch(`http://localhost:8084/api/deleteRow/${userID}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.status === 204) {
+        
+        setInputData((prevData) => prevData.filter((item) => item.userID !== userID));
+      } else {
+        alert('Error deleting data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while deleting data');
+    }
+  };
+  
+
+  // Fetch data from the backend 
   useEffect(() => {
-    // Fetch data from the backend 
     fetch('http://localhost:8084/api/getfields')
       .then((response) => response.json())
       .then((data) => {
         setData(data); 
-        setIsLoading(false); // Set loading state to false
+        setIsLoading(false); 
         console.log(data);
         setInputData(data);
       })
       .catch((error) => {
-        setError(error); // Set error state if there's an error
-        setIsLoading(false); // Set loading state to false
+        setError(error); 
+        setIsLoading(false); 
       });
   }, []);
 
 
 
+//Frontend part 
   return (
     <div>
       <h1>
@@ -110,15 +135,12 @@ const Admin_register = () => {
               <option value="text">Text</option>
              <option value="email">Email</option>
              <option value="date">Date</option>
-             {/* <option value="checkbox">Checkbox</option> */}
              <option value="number">Number</option>
              <option value="week">Week</option>
              <option value="time">Time</option>
              <option value="file">File</option>
              <option value="datetime">DateTime</option>
              <option value="tel">Telephone</option>
-             {/* <option value="submit">Submit</option>
-             <option value="button">Button</option> */}
              <option value="password">Password</option>
             </select>
           </div>
@@ -127,6 +149,8 @@ const Admin_register = () => {
           </div>
         </form>
       </div>
+
+      
       {isLoading ? (
         <div>Loading...</div>
       ) : error ? (
@@ -212,11 +236,10 @@ const Admin_register = () => {
       />
     )}
     <div >
-    <button className="delete-btn" type='submit'>Delete</button>
+    <button className="delete-btn" data-userid={item.userID} onClick={()=> handleDelete(item.userID)}>Delete</button>
     </div>
   </div>
 ))}
-
     </div>
       )}</div>
       

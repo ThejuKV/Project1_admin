@@ -33,6 +33,7 @@ const Admin_login = () => {
     const data = {
       label: selectedlabel,
       field: selectedFieldName,
+      
     };
     
     console.log('Data to be sent to the backend:', data);
@@ -58,6 +59,28 @@ const Admin_login = () => {
       alert('An error occurred while submitting data');
     }
   };
+
+  const handleDelete = async (userID) => {
+    // const user_id = e.target.dataset.userid;
+  
+    try {
+      const response = await fetch(`http://localhost:8082/api/deleteRow/${userID}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.status === 204) {
+        // Row deleted successfully from the server, update the front end
+        setInputData((prevData) => prevData.filter((item) => item.userID !== userID));
+      } else {
+        alert('Error deleting data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while deleting data');
+    }
+  };
+  
+
 
   useEffect(() => {
     // Fetch data from the backend 
@@ -125,7 +148,7 @@ const Admin_login = () => {
             </select>
           </div>
           <div>
-            <button className='submit-btn' type="submit">Submit</button>
+            <button className='submit-btn' type='submit'>Submit</button>
           </div>
         </form>
       </div>
@@ -206,6 +229,14 @@ const Admin_login = () => {
          // Set the input value
       />
     )  
+    : item.inputType === 'email' ? (
+      <input
+        type="email"
+        id={item.Label}
+        name={item.Label}
+         // Set the input value
+      />
+    ) 
     : (
       <input
         type={item.inputType}
@@ -215,7 +246,7 @@ const Admin_login = () => {
       />
     )}
     <div >
-    <button className="delete-btn" type='submit'>Delete</button>
+    <button className="delete-btn" data-userid={item.userID} onClick={()=> handleDelete(item.userID)}>Delete</button>
     </div>
   </div>
 ))}
