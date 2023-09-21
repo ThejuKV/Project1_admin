@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Routes,Route } from 'react-router-dom';
 
 
 function App() {
+  
   return (
     <Router>
     <Routes>
@@ -21,8 +22,6 @@ function App() {
       <Route path='/Header' element={<Header/>}/>
     </Routes>
   </Router>
-
-    
   );
 }
 

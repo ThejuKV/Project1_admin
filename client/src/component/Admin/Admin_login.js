@@ -50,6 +50,7 @@ const Admin_login = () => {
 
       if (response.status === 200) {
         alert('Data submitted successfully');
+        setInputData((prevData) => [...prevData, data]);
         setSelectedlabel('');
         setSelectedFieldName('');
       } else {
@@ -62,6 +63,24 @@ const Admin_login = () => {
   };
 
 
+
+  // refresh
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:8082/api/getfields');
+      if (response.status === 200) {
+        const data = await response.json();
+        setData(data);
+        setInputData(data);
+        setIsLoading(false);
+      } else {
+        throw new Error('Error fetching data');
+      }
+    } catch (error) {
+      setError(error);
+      setIsLoading(false);
+    }
+  };
 
 //To handle the delete button
   const handleDelete = async (userID, label) => {
@@ -89,6 +108,12 @@ const Admin_login = () => {
 
 
   useEffect(() => {
+    fetchData();
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 50); 
+    // return () => clearInterval(intervalId);
+
     // Fetch data from the backend 
     fetch('http://localhost:8082/api/getfields')
       .then((response) => response.json())
@@ -210,6 +235,7 @@ const handleCheckboxClick = async (userID) => {
           </div>
         </form>
       </div>
+      
       {isLoading ? (
         <div>Loading...</div>
       ) : error ? (

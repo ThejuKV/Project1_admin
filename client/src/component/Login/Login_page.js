@@ -7,10 +7,11 @@ const Login_page = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:8082/api/getCheckedFieldsLogin')
+    // Fetch data from the backend where checkbox is 1
+    fetch('http://localhost:8082/api/getCheckboxStatusLogin/1') // Change the endpoint as needed
       .then((response) => response.json())
       .then((data) => {
-        setCheckedFields(data);
+        setData(data);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -32,88 +33,14 @@ const Login_page = () => {
       ) : error ? (
         <div>Error: {error.message}</div>
       ) : (
-        <div className="displaydata">
-          {checkedFields.map((item) => (
-            <div key={item.id}>
-            <label htmlFor={item.Label}>{item.label}:</label>
-    {item.inputType === 'date' ? (
-      <input
-        type="date"
-        id={item.Label}
-        name={item.Label}
-        
-      />
-    ) : item.inputType === 'text' ? (
-      <input
-        type="text"
-        id={item.Label}
-        name={item.Label}
-        
-      />
-    ) : item.inputType === 'number' ? (
-      <input
-    
-        type="number"
-        id={item.Label}
-        name={item.Label}
-         // Set the input value
-      />
-    ): item.inputType === 'tel' ? (
-      <input
-        type="tel"
-        pattern="[0-9]{3}"
-        id={item.Label}
-        name={item.Label}
-         // Set the input value
-      />
-    ): item.inputType === 'datetime' ? (
-      <input
-        type="datetime"
-        id={item.Label}
-        name={item.Label}
-         // Set the input value
-      />
-    )  : item.inputType === 'password' ? (
-      <input
-        type="password"
-        id={item.Label}
-        name={item.Label}
-         // Set the input value
-      />
-    ) : item.inputType === 'time' ? (
-      <input
-        type="time"
-        id={item.Label}
-        name={item.Label}
-         // Set the input value
-      />
-    ): item.inputType === 'week' ? (
-      <input
-        type="week"
-        id={item.Label}
-        name={item.Label}
-         // Set the input value
-      />
-    ): item.inputType === 'file' ? (
-      <input
-        type="file"
-        id={item.Label}
-        name={item.Label}
-         // Set the input value
-      />
-    ) : (
-      <input
-        type={item.inputType}
-        id={item.Label}
-        name={item.Label}
-        
-      />
-    )}
-    </div>
-    ))}
-    <div>
-            <button className='submit-btn' type="submit">Submit</button>
-          </div>
+        <div>
+          <ul>
+            {data.map((item) => (
+              <li key={item.userID}>
+                <p>{item.label}: {item.inputType}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
