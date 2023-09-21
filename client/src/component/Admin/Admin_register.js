@@ -1,6 +1,6 @@
 import React, { useState ,useEffect} from 'react';
 import './Admin.css';
-
+import { Link } from 'react-router-dom';
 
 const inputTypes = [
   { type: 'text', label: 'Text' },
@@ -25,6 +25,26 @@ const Admin_register = () => {
   const [error, setError] = useState(null);
   const [checkboxStatus, setCheckboxStatus] = useState({});
 
+
+
+
+  //handle refreshing
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:8084/api/getfields');
+      if (response.status === 200) {
+        const data = await response.json();
+        setData(data);
+        setInputData(data);
+        setIsLoading(false);
+      } else {
+        throw new Error('Error fetching data');
+      }
+    } catch (error) {
+      setError(error);
+      setIsLoading(false);
+    }
+  };
 
 
   //To handle the submit button
@@ -87,6 +107,10 @@ const Admin_register = () => {
 
   // Fetch data from the backend 
   useEffect(() => {
+    fetchData();
+    const intervalId = setInterval(() => {
+      fetchData();
+    },); 
     fetch('http://localhost:8084/api/getfields')
       .then((response) => response.json())
       .then((data) => {
@@ -163,7 +187,11 @@ const Admin_register = () => {
         <center>
           <b>REGISTER</b>
         </center>
-      </h1>
+      </h1><div className="button-Register_Display">
+      <Link to="/Register_page">
+        <button className="Registerpage-button" >RegisterPage</button>
+        </Link>
+      </div>
       <div className="container">
         <form onSubmit={handleSubmit} className="form-horizontal">
           <div className="form-group">

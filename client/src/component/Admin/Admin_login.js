@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import './Admin.css';
+import { Link } from 'react-router-dom';
 
 const inputTypes = [
   { type: 'text', label: 'Text' },
@@ -47,6 +48,7 @@ const Admin_login = () => {
 
       if (response.status === 200) {
         alert('Data submitted successfully');
+        setInputData((prevData) => [...prevData, data]);
         setSelectedlabel('');
         setSelectedFieldName('');
       } else {
@@ -59,6 +61,24 @@ const Admin_login = () => {
   };
 
 
+
+  // refresh
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:8082/api/getfields');
+      if (response.status === 200) {
+        const data = await response.json();
+        setData(data);
+        setInputData(data);
+        setIsLoading(false);
+      } else {
+        throw new Error('Error fetching data');
+      }
+    } catch (error) {
+      setError(error);
+      setIsLoading(false);
+    }
+  };
 
 //To handle the delete button
   const handleDelete = async (userID) => {
@@ -81,6 +101,12 @@ const Admin_login = () => {
 
 
   useEffect(() => {
+    fetchData();
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 50); 
+    // return () => clearInterval(intervalId);
+
     // Fetch data from the backend 
     fetch('http://localhost:8082/api/getfields')
       .then((response) => response.json())
@@ -89,8 +115,7 @@ const Admin_login = () => {
         setIsLoading(false); 
         console.log(data);
         setInputData(data);
-
-
+        
         //checkbox function
         const initialCheckboxStatus = {};
         data.forEach((item) => {
@@ -158,6 +183,11 @@ const Admin_login = () => {
           <b>LOGIN</b>
         </center>
       </h1>
+      <div className="button-Login_Display">
+      <Link to="/Login_page">
+        <button className="loginlist-button" >Loginpage</button>
+        </Link>
+      </div>
       <div className="container">
         <form onSubmit={handleSubmit} className="form-horizontal">
           <div className="form-group">
@@ -203,6 +233,7 @@ const Admin_login = () => {
           </div>
         </form>
       </div>
+      
       {isLoading ? (
         <div>Loading...</div>
       ) : error ? (
