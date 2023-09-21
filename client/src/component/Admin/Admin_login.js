@@ -1,5 +1,8 @@
 import React, { useState,useEffect } from 'react';
 import './Admin.css';
+// import './Login/Login_page';
+import { Link } from "react-router-dom";
+import Header from "../AppHeader/Header";
 
 const inputTypes = [
   { type: 'text', label: 'Text' },
@@ -61,22 +64,27 @@ const Admin_login = () => {
 
 
 //To handle the delete button
-  const handleDelete = async (userID) => {
-    try {
-      const response = await fetch(`http://localhost:8082/api/deleteRow/${userID}`, {
-        method: 'DELETE',
-      });
+  const handleDelete = async (userID, label) => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete the "${label}"?`);
   
-      if (response.status === 204) {
-        setInputData((prevData) => prevData.filter((item) => item.userID !== userID));
-      } else {
-        alert('Error deleting data');
+    if (confirmDelete) {
+      try {
+        const response = await fetch(`http://localhost:8082/api/deleteRow/${userID}`, {
+          method: 'DELETE',
+        });
+  
+        if (response.status === 204) {
+          setInputData((prevData) => prevData.filter((item) => item.userID !== userID));
+        } else {
+          alert('Error deleting data');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while deleting data');
       }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred while deleting data');
     }
   };
+  
   
 
 
@@ -91,73 +99,75 @@ const Admin_login = () => {
         setInputData(data);
 
 
-        //checkbox function
-        const initialCheckboxStatus = {};
-        data.forEach((item) => {
-          initialCheckboxStatus[item.userID] = item.checkbox === 1; 
-        });
-        setCheckboxStatus(initialCheckboxStatus);
+//checkbox function
+const initialCheckboxStatus = {};
+data.forEach((item) => {
+initialCheckboxStatus[item.userID] = item.checkbox === 1; 
+  });
+setCheckboxStatus(initialCheckboxStatus);
 
-        data.forEach((item) => {
-          fetch(`http://localhost:8082/api/getCheckboxStatusLogin/${item.userID}`)
-            .then((response) => response.json())
-            .then((result) => {
-              const updatedCheckboxStatus = { ...checkboxStatus };
-              updatedCheckboxStatus[item.userID] = result.checkbox === 1;
-              setCheckboxStatus(updatedCheckboxStatus);
-            })
-            .catch((error) => {
-              console.error('Error fetching checkbox status:', error);
-            });
-        });
+data.forEach((item) => {
+  fetch(`http://localhost:8082/api/getCheckboxStatusLogin/${item.userID}`)
+  .then((response) => response.json())
+  .then((result) => {
+    const updatedCheckboxStatus = { ...checkboxStatus };
+    updatedCheckboxStatus[item.userID] = result.checkbox === 1;
+    setCheckboxStatus(updatedCheckboxStatus);
+    })
+.catch((error) => {
+  console.error('Error fetching checkbox status:', error);
+   });
+ });
+ })
+.catch((error) => {
+  setError(error); 
+  setIsLoading(false); 
+    });
+  }, 
+  []);
 
-      })
-      .catch((error) => {
-        setError(error); 
-        setIsLoading(false); 
-      });
-  }, []);
 
 
 
-  //Handle the checkbox
-  const handleCheckboxClick = async (userID) => {
-    const newCheckboxStatus = {
-      ...checkboxStatus,
-      [userID]: !checkboxStatus[userID], 
-    };
-
-    setCheckboxStatus(newCheckboxStatus);
-
-    try {
-      const response = await fetch(`http://localhost:8082/api/updateCheckboxLogin/${userID}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ checkbox: newCheckboxStatus[userID] ? 1 : 0 }),
-      });
-
-      if (response.status !== 200) {
-        alert('Error updating checkbox status');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred while updating checkbox status');
-    }
+//Handle the checkbox
+const handleCheckboxClick = async (userID) => {
+  const newCheckboxStatus = {
+    ...checkboxStatus,
+    [userID]: !checkboxStatus[userID], 
   };
 
+  setCheckboxStatus(newCheckboxStatus);
+
+  try {
+    const response = await fetch(`http://localhost:8082/api/updateCheckboxLogin/${userID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ checkbox: newCheckboxStatus[userID] ? 1 : 0 }),
+    });
+
+    if (response.status !== 200) {
+      alert('Error updating checkbox status');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred while updating checkbox status');
+  }
+};
 
 
 
   //Frontend part
   return (
     <div>
+    <Header/>
       <h1>
         <center>
           <b>LOGIN</b>
         </center>
       </h1>
+      
       <div className="container">
         <form onSubmit={handleSubmit} className="form-horizontal">
           <div className="form-group">
@@ -186,15 +196,12 @@ const Admin_login = () => {
               <option value="text">Text</option>
              <option value="email">Email</option>
              <option value="date">Date</option>
-             {/* <option value="checkbox">Checkbox</option> */}
              <option value="number">Number</option>
              <option value="week">Week</option>
              <option value="time">Time</option>
              <option value="file">File</option>
              <option value="datetime">DateTime</option>
              <option value="tel">Telephone</option>
-             {/* <option value="submit">Submit</option>
-             <option value="button">Button</option> */}
              <option value="password">Password</option>
             </select>
           </div>
@@ -303,9 +310,13 @@ const Admin_login = () => {
 ))}
 
     </div>
-      )}</div>
-      
-    
+      )}
+      <div className='preview-page'>
+      <Link to="/Login_page">
+        <button className="preview-btn" >Preview</button>
+        </Link>
+        </div>
+      </div>  
   );
 };
 

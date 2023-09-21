@@ -1,4 +1,9 @@
-
+/* .bg-image{
+  background-image: url('./background_image');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+} */
 .Admin_panel {
     text-align: center;
     display: flex;
@@ -23,7 +28,7 @@
     padding: 15px 25px;
     font-size: 1rem;
     background-color: #007bff;
-    color: #fff;
+    color: #ffffff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -32,5 +37,6 @@
   .login-button:hover,
   .register-button:hover {
     background-color: #0056b3;
+    
   }
   

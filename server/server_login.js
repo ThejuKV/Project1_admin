@@ -150,6 +150,36 @@ app.get('/api/getCheckboxStatusLogin/:user_id', (req, res) => {
 
 
 
+//display in login page
+app.get('/api/getCheckedFieldsLogin', (req, res) => {
+  const sql = 'SELECT * FROM user_fields_login WHERE checkbox = 1';
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error fetching checked fields from MySQL:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      console.log('Checked fields retrieved from MySQL');
+
+      const checkedFieldsArray = [];
+
+      results.forEach((row) => {
+        const fieldObject = {
+          label: row.label,
+          inputType: row.field,
+          userID: row.user_id,
+        };
+        checkedFieldsArray.push(fieldObject);
+      });
+      res.status(200).json(checkedFieldsArray);
+    }
+  });
+});
+
+
+
+
+
 //Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

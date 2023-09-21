@@ -1,0 +1,43 @@
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #000000;
+    color: #ffffff;
+  }
+  
+  .logo {
+    font-size: 25px;
+    font-weight: bold;
+  }
+  
+  .right ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .right li {
+    margin-left: 20px;
+  }
+  
+  .right li button {
+    background-color: #ffffff; 
+    color: #000000;
+    padding: 6px 6px;
+    border-radius: 5px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+  }
+
+  .right li a button:hover {
+    background-color: #000000; 
+    color: #ffffff;
+  }
+  
+  

@@ -2,14 +2,15 @@ import React from 'react';
 import './Admin_panel.css';
 import './Admin_login';
 import './Admin_register';
-// import Admin from './Admin';
 import { Link } from "react-router-dom";
+// import background_image from './Image/bg.jpg';
+
 
 function Admin_panel() {
 
   return (
     <div className="Admin_panel">
-      <h1><b>Admin Panel</b></h1>
+      <h1><b>ADMIN PANEL</b></h1><br/>
       <div className="button-container">
       <Link to="/Admin_login">
         <button className="login-button" >Login</button>
@@ -17,9 +18,11 @@ function Admin_panel() {
         <Link to="/Admin_register">
         <button className="register-button" >Register</button>
         </Link>
+        
       </div>
       
     </div>
+    
   );
 }
 

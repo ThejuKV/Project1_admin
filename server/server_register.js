@@ -105,7 +105,6 @@ app.delete('/api/deleteRow/:user_id', (req, res) => {
 
 
 
-
 //To update the checkbox column to "1" and "0"
 app.put('/api/updateCheckboxRegister/:user_id', (req, res) => {
   const user_id = req.params.user_id;
@@ -126,6 +125,8 @@ app.put('/api/updateCheckboxRegister/:user_id', (req, res) => {
 });
 
 
+
+
 //even after the refresh
 app.get('/api/getCheckboxStatusRegister/:user_id', (req, res) => {
   const user_id = req.params.user_id;
@@ -141,6 +142,35 @@ app.get('/api/getCheckboxStatusRegister/:user_id', (req, res) => {
       const checkboxStatus = result[0] ? result[0].checkbox : 0;
       console.log('Checkbox status fetched from MySQL:', checkboxStatus);
       res.status(200).json({ checkbox: checkboxStatus });
+    }
+  });
+});
+
+
+
+
+//display in register page
+app.get('/api/getCheckedFieldsRegister', (req, res) => {
+  const sql = 'SELECT * FROM user_fields_register WHERE checkbox = 1';
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error fetching checked fields from MySQL:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      console.log('Checked fields retrieved from MySQL');
+
+      const checkedFieldsArray = [];
+
+      results.forEach((row) => {
+        const fieldObject = {
+          label: row.label,
+          inputType: row.field,
+          userID: row.user_id,
+        };
+        checkedFieldsArray.push(fieldObject);
+      });
+      res.status(200).json(checkedFieldsArray);
     }
   });
 });

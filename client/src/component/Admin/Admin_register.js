@@ -1,5 +1,8 @@
 import React, { useState ,useEffect} from 'react';
 import './Admin.css';
+// import './Register_page';
+import { Link } from "react-router-dom";
+import Header from "../AppHeader/Header";
 
 
 const inputTypes = [
@@ -64,7 +67,10 @@ const Admin_register = () => {
 
 
   //To handle the delete button
-  const handleDelete = async (userID) => {
+  const handleDelete = async (userID,label) => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete the "${label}"?`);
+  
+    if (confirmDelete) {
   
     try {
       const response = await fetch(`http://localhost:8084/api/deleteRow/${userID}`, {
@@ -81,7 +87,8 @@ const Admin_register = () => {
       console.error('Error:', error);
       alert('An error occurred while deleting data');
     }
-  };
+  }
+};
   
 
 
@@ -159,6 +166,7 @@ const Admin_register = () => {
 //Frontend part 
   return (
     <div>
+    <Header/>
       <h1>
         <center>
           <b>REGISTER</b>
@@ -293,12 +301,18 @@ const Admin_register = () => {
       />
     )}
     <div >
-    <button className="delete-btn" data-userid={item.userID} onClick={()=> handleDelete(item.userID)}>Delete</button>
+    <button className="delete-btn" data-userid={item.userID} onClick={()=> handleDelete(item.userID,item.label)}>Delete</button>
     </div>
   </div>
 ))}
     </div>
-      )}</div>
+      )}
+      <div className='preview-page'>
+      <Link to="/Register_page">
+        <button className="preview-btn" >Preview</button>
+        </Link>
+        </div>
+      </div>
       
     
   );
