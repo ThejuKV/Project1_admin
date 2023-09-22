@@ -5,7 +5,7 @@ const Login_page = () => {
   const [checkedFields, setCheckedFields] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
+const [data,setData]=useState([]);
   useEffect(() => {
     // Fetch data from the backend where checkbox is 1
     fetch('http://localhost:8082/api/getCheckboxStatusLogin/1') // Change the endpoint as needed

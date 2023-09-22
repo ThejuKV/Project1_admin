@@ -11,6 +11,11 @@ function Header() {
       </div>
       <div className="right">
         <ul>
+        <li>
+            <Link to="/Images">
+                <button >Images</button>
+            </Link>
+          </li>
           <li>
             <Link to="/Admin_register">
                 <button >Register</button>

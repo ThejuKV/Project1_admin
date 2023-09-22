@@ -24,7 +24,7 @@ const Register_page = () => {
     <Header/>
       <h1>
         <center>
-          <b>Register Page</b>
+          {/* <b>Register Page</b> */}
         </center>
       </h1>
       {isLoading ? (

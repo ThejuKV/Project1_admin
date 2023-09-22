@@ -1,9 +1,7 @@
 import React from 'react';
 import './Admin_panel.css';
-import './Admin_login';
-import './Admin_register';
 import { Link } from "react-router-dom";
-// import background_image from './Image/bg.jpg';
+
 
 
 function Admin_panel() {
@@ -17,6 +15,9 @@ function Admin_panel() {
         </Link>
         <Link to="/Admin_register">
         <button className="register-button" >Register</button>
+        </Link>
+        <Link to="/Images">
+        <button className="image-button" >Image</button>
         </Link>
         
       </div>

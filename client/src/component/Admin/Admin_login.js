@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from 'react';
 import './Admin.css';
-// import './Login/Login_page';
 import { Link } from "react-router-dom";
 import Header from "../AppHeader/Header";
 
@@ -65,22 +64,22 @@ const Admin_login = () => {
 
 
   // refresh
-  const fetchData = async () => {
-    try {
-      const response = await fetch('http://localhost:8082/api/getfields');
-      if (response.status === 200) {
-        const data = await response.json();
-        setData(data);
-        setInputData(data);
-        setIsLoading(false);
-      } else {
-        throw new Error('Error fetching data');
-      }
-    } catch (error) {
-      setError(error);
-      setIsLoading(false);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:8082/api/getfields');
+  //     if (response.status === 200) {
+  //       const data = await response.json();
+  //       setData(data);
+  //       setInputData(data);
+  //       setIsLoading(false);
+  //     } else {
+  //       throw new Error('Error fetching data');
+  //     }
+  //   } catch (error) {
+  //     setError(error);
+  //     setIsLoading(false);
+  //   }
+  // };
 
 //To handle the delete button
   const handleDelete = async (userID, label) => {
@@ -108,10 +107,8 @@ const Admin_login = () => {
 
 
   useEffect(() => {
-    fetchData();
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 50); 
+    
+   
     // return () => clearInterval(intervalId);
 
     // Fetch data from the backend 
@@ -147,6 +144,7 @@ data.forEach((item) => {
 .catch((error) => {
   setError(error); 
   setIsLoading(false); 
+  // fetchData();
     });
   }, 
   []);
@@ -252,13 +250,15 @@ const handleCheckboxClick = async (userID) => {
         type="date"
         id={item.Label}
         name={item.Label}
-        value={item.label} // Set the input value
+        value={item.label}
+        className='form-control' // Set the input value
       />
     ) : item.inputType === 'text' ? (
       <input
         type="text"
         id={item.Label}
         name={item.Label}
+        className='form-control'
          // Set the input value
       />
     ) : item.inputType === 'number' ? (
@@ -267,6 +267,7 @@ const handleCheckboxClick = async (userID) => {
         type="number"
         id={item.Label}
         name={item.Label}
+        className='form-control'
          // Set the input value
       />
     ): item.inputType === 'tel' ? (
@@ -275,6 +276,7 @@ const handleCheckboxClick = async (userID) => {
         pattern="[0-9]{3}"
         id={item.Label}
         name={item.Label}
+        className='form-control'
          // Set the input value
       />
     ): item.inputType === 'datetime' ? (
@@ -282,6 +284,7 @@ const handleCheckboxClick = async (userID) => {
         type="datetime"
         id={item.Label}
         name={item.Label}
+        className='form-control'
          // Set the input value
       />
     ) : item.inputType === 'password' ? (
@@ -289,6 +292,7 @@ const handleCheckboxClick = async (userID) => {
         type="password"
         id={item.Label}
         name={item.Label}
+        className='form-control'
          // Set the input value
       />
     ) : item.inputType === 'time' ? (
@@ -296,6 +300,7 @@ const handleCheckboxClick = async (userID) => {
         type="time"
         id={item.Label}
         name={item.Label}
+        className='form-control'
          // Set the input value
       />
     ): item.inputType === 'week' ? (
@@ -303,6 +308,7 @@ const handleCheckboxClick = async (userID) => {
         type="week"
         id={item.Label}
         name={item.Label}
+        className='form-control'
          // Set the input value
       />
     ): item.inputType === 'file' ? (
@@ -310,6 +316,7 @@ const handleCheckboxClick = async (userID) => {
         type="file"
         id={item.Label}
         name={item.Label}
+        className='form-control'
          // Set the input value
       />
     )  
@@ -318,6 +325,7 @@ const handleCheckboxClick = async (userID) => {
         type="email"
         id={item.Label}
         name={item.Label}
+        className='form-control'
          // Set the input value
       />
     ) 
@@ -330,7 +338,7 @@ const handleCheckboxClick = async (userID) => {
       />
     )}
     <div >
-    <button className="delete-btn" data-userid={item.userID} onClick={()=> handleDelete(item.userID)}>Delete</button>
+    <button className="delete-btn" data-userid={item.userID} onClick={()=> handleDelete(item.userID,item.label)}>Delete</button>
     </div>
   </div>
 ))}

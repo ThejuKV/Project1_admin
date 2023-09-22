@@ -24,7 +24,7 @@ h1 {
 }
 
 .login-button,
-.register-button {
+.register-button,.image-button {
     padding: 15px 25px;
     font-size: 1rem;
     background-color: #007bff;
@@ -35,7 +35,7 @@ h1 {
 }
 
 .login-button:hover,
-.register-button:hover {
+.register-button:hover,.image-button:hover {
     background-color: #0056b3;
     
   }
