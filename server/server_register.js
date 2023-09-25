@@ -7,6 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 const port = 8084;
 app.use(cors());
 app.use(bodyParser.json());
+const db = require('./db');
 
 
 
@@ -19,23 +20,6 @@ function generateHexadecimalId() {
 
 
 
-//Connection to database
-const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "project1"
-})
-
-db.connect((err) => {
-    if (err) {
-        console.error('Error connecting to the database:', err);
-        return;
-    }
-    console.log('Connected to the database');
-});
-
-
 
 //To store the data into the table
 app.post('/api/postdataregister', (req, res) => {
@@ -43,7 +27,7 @@ app.post('/api/postdataregister', (req, res) => {
     console.log('Data received from frontend:', data);
     const userid = generateHexadecimalId();
     const { label, field } = data;
-    const sql = 'INSERT INTO user_fields_register (user_id,label, field) VALUES (?,?,?)';
+    const sql = 'INSERT INTO user_fields_register (user_id, label, field) VALUES (?,?,?)';
     const values = [userid, label, field];
 
     db.query(sql, values, (err, result) => {
@@ -56,6 +40,7 @@ app.post('/api/postdataregister', (req, res) => {
         }
     });
 });
+
 
 
 

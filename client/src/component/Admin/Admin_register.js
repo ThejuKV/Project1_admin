@@ -56,7 +56,6 @@ const Admin_register = () => {
         // setInputData((prevData) => [...prevData, data]);
         setInputData((prevData) => ([...prevData, data] ));
         // console.log("old data" + prevData);
-        console.log("full data" + data);
       } else {
         alert("Error submitting data");
       }

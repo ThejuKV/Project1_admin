@@ -11,6 +11,7 @@ import ImagePreview from './component/Images/ImagePreview';
 
 
 
+
 function App() {
   
   return (
@@ -24,6 +25,7 @@ function App() {
       <Route path='/Header' element={<Header/>}/>
       <Route path='/Images' element={<Images/>}/>
       <Route path='/ImagePreview' element={<ImagePreview/>}/>
+      
 
     </Routes>
   </Router>
