@@ -96,6 +96,8 @@ const Admin_register = () => {
     }
   };
 
+
+  
   // Fetch data from the backend
   useEffect(() => {
     // fetchData();

@@ -52,6 +52,74 @@ const handleSubmitUrl = async (e) => {
     }
   };
 
+  // useEffect(() => {
+  //   fetch("http://localhost:8086/api/getImages")
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setIsLoading(false);
+  //       console.log(data);
+  //       setInputData(data);
+
+  //       //checkbox function
+  //       const initialCheckboxStatus = {};
+  //       data.forEach((item) => {
+  //         initialCheckboxStatus[item.ImageId] = item.checkbox === 1; // Assuming 1 is checked and 0 is unchecked
+  //       });
+  //       setCheckboxStatus(initialCheckboxStatus);
+
+  //       data.forEach((item) => {
+  //         fetch(
+  //           `http://localhost:8086/api/getCheckboxStatusImages/${item.ImageId}`
+  //         )
+  //           .then((response) => response.json())
+  //           .then((result) => {
+  //             const updatedCheckboxStatus = { ...checkboxStatus };
+  //             updatedCheckboxStatus[item.ImageId] = result.checkbox === 1;
+  //             setCheckboxStatus(updatedCheckboxStatus);
+  //           })
+  //           .catch((error) => {
+  //             console.error("Error fetching checkbox status:", error);
+  //           });
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       setError(error);
+  //       setIsLoading(false);
+  //     });
+  // }, []);
+
+
+
+  // //Handle the checkbox
+  // const handleCheckboxClick = async (ImageId) => {
+  //   const newCheckboxStatus = {
+  //     ...checkboxStatus,
+  //     [ImageId]: !checkboxStatus[ImageId],
+  //   };
+
+  //   setCheckboxStatus(newCheckboxStatus);
+
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:8086/api/updateCheckboxImages/${ImageId}`,
+  //       {
+  //         method: "PUT",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ checkbox: newCheckboxStatus[ImageId] ? 1 : 0 }),
+  //       }
+  //     );
+
+  //     if (response.status !== 200) {
+  //       alert("Error updating checkbox status");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     alert("An error occurred while updating checkbox status");
+  //   }
+  // };
+
 
   return (
     <div>
@@ -133,7 +201,7 @@ const handleSubmitUrl = async (e) => {
           </form>
         </div>
         <div className="preview-page">
-        <Link to="">
+        <Link to="/ImagePreview">
           <button className="preview-btn">Preview</button>
         </Link>
       </div>

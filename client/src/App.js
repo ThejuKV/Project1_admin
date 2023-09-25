@@ -7,6 +7,7 @@ import Register_page from './component/Register/Register_page';
 import Header from './component/AppHeader/Header';
 import Images from './component/Images/Images';
 import { BrowserRouter as Router, Routes,Route } from 'react-router-dom';
+import ImagePreview from './component/Images/ImagePreview';
 
 
 
@@ -22,6 +23,8 @@ function App() {
       <Route path="/Register_page" element={<Register_page />} />
       <Route path='/Header' element={<Header/>}/>
       <Route path='/Images' element={<Images/>}/>
+      <Route path='/ImagePreview' element={<ImagePreview/>}/>
+
     </Routes>
   </Router>
   );
