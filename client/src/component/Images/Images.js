@@ -12,7 +12,41 @@ const Images = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [checkboxStatus, setCheckboxStatus] = useState({});
+    const [fileData, setFileData] = useState(null);
     
+
+  //file handling
+  const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+              setFileData(e.target.result);
+          };
+          reader.readAsDataURL(file);
+      }
+  };
+
+
+  const handleUpload = () => {
+    fetch('/upload', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fileData }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data.message);
+        // Handle success or error here
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        // Handle error here
+    });
+};
+
 
 
 // handle submit 
@@ -194,15 +228,16 @@ const handleDelete = async (ImageId, ImageType) => {
             </select>
           </div>
           <div>
-            <label>Link:</label>
+            <label>Upload file:</label>
             <input
               type="file"
               id="image-url"
               name="image-url"
               placeholder="Enter the url"
               value={selectedImageUrl}
-              onChange={(e) => setSelectedImageUrl(e.target.value)}
+              onChange={handleFileChange}
               required
+              // (e) => setSelectedImageUrl(e.target.value)
             />
           </div>
           <div>

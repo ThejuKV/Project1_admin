@@ -1,0 +1,78 @@
+
+body {
+    background-image: url('./BG.jpg');
+    background-color: #ccc;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+    font-family: Arial, sans-serif; 
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8); 
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); 
+  }
+  
+  
+  h1 {
+    text-align: center;
+  }
+  
+  
+  .loading,
+  .error,
+  .displaydata {
+    padding: 39px;
+    background-color: white;
+    border-radius: 5px;
+    width: 51%;
+    height: 252px;
+    position: fixed;
+    top: 46%;
+    left: 19%;
+    margin-top: -100px;
+    margin-left: -200px;
+  }
+  
+ 
+  input[type="text"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="time"],
+  input[type="date"],
+  input[type="datetime"],
+  input[type="week"],
+  input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #00235f;
+    border-radius: 5px;
+  }
+  
+  
+  .submit-btn {
+    display: block;
+    width: 102.9%;
+    padding: 10px;
+    background-color: #00235f; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .submit-btn:hover {
+    background-color: #0056b3; 
+  }

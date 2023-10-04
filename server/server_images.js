@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const cors = require('cors');
 const app = express();
-const multer = require('multer');
+// const multer = require('multer');
 const port = 8086;
 const { v4: uuidv4 } = require('uuid');
 app.use(cors());
@@ -23,17 +23,17 @@ function generateHexadecimalId() {
 
 
 //To store the image file in the uploads folder
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './public/uploads'); 
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + '-' + file.originalname); 
-    },
-});
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, './public/uploads'); 
+//     },
+//     filename: function (req, file, cb) {
+//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//         cb(null, uniqueSuffix + '-' + file.originalname); 
+//     },
+// });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
 
 
@@ -42,11 +42,9 @@ const upload = multer({ storage: storage });
 
 
 //To store the url data into the table
-app.post('/api/postdataImage', upload.single('image-url'), (req, res) => {
+app.post('/api/postdataImage', (req, res) => {
     const data = req.body;
-    const file = req.file;
     console.log('Data received from frontend:', data);
-    console.log('file:',file);
 
     const ImageId = generateHexadecimalId();
     const {  ImageType, Url, ImagePlace, DisplayPage } = data;
