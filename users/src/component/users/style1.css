@@ -29,32 +29,35 @@ body {
   }
   
   
-  .loading,
-  .error,
+
   .displaydata {
-    padding: 39px;
-    background-color: white;
-    border-radius: 5px;
-    width: 51%;
-    height: 252px;
-    position: fixed;
+    /* position: fixed; */
     top: 46%;
     left: 19%;
     margin-top: -100px;
-    margin-left: -200px;
+    margin-left: 20px;
+    max-width: 55%;
+    margin-top: 185px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    
   }
   
  
-  input[type="text"],
-  input[type="number"],
-  input[type="tel"],
-  input[type="password"],
-  input[type="time"],
-  input[type="date"],
-  input[type="datetime"],
-  input[type="week"],
-  input[type="file"] {
-    width: 100%;
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="file"],
+input[type="time"],
+input[type="week"],
+input[type="email"],
+input[type="date"],
+input[type="url"],
+input[type="datetime"] {
+    width: 95%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #00235f;
@@ -64,7 +67,7 @@ body {
   
   .submit-btn {
     display: block;
-    width: 102.9%;
+    width: 99%;
     padding: 10px;
     background-color: #00235f; 
     color: white;
@@ -74,5 +77,36 @@ body {
   }
   
   .submit-btn:hover {
-    background-color: #0056b3; 
+    background-color: #024184; 
   }
+
+  @media screen and (max-width: 768px) {
+    body {
+        background-size: contain;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .displaydata {
+        top: 10%;
+        left: 10%;
+        max-width: 80%;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="file"],
+    input[type="time"],
+    input[type="week"],
+    input[type="email"],
+    input[type="date"],
+    input[type="url"],
+    input[type="datetime"] {
+        width: 100%;
+    }
+}
