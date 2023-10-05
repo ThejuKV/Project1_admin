@@ -23,36 +23,37 @@ function generateHexadecimalId() {
 
 
 //To store the image file in the uploads folder
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, './public/uploads');
+//     },
+//     filename: function (req, file, cb) {
+//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//         cb(null, uniqueSuffix + '-' + file.originalname);
+//     },
+// });
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './public/uploads'); 
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + '-' + file.originalname); 
-    },
+    destination: './public/uploads/',
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
 });
-
 const upload = multer({ storage: storage });
 
-
-
-
-
-
-
-//To store the url data into the table
-app.post('/api/postdataImage', upload.single('image-url'), (req, res) => {
+app.post('/api/postdataImage', upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
     const data = req.body;
-    const file = req.file;
+    const file = req.file.filename;
     console.log('Data received from frontend:', data);
-    console.log('file:',file);
+    console.log('file:', file);
 
     const ImageId = generateHexadecimalId();
-    const {  ImageType, Url, ImagePlace, DisplayPage } = data;
+    const { ImageType, ImagePlace, DisplayPage } = data;
     const sql = 'INSERT INTO user_images (Image_id, ImageType, Url, ImagePlace, DisplayPage) VALUES (?,?,?,?,?)';
-    const values = [ImageId, ImageType, Url, ImagePlace, DisplayPage];
-
+    const values = [ImageId, ImageType, file, ImagePlace, DisplayPage];
+    console.log('Data received from frontend:', values);
     db.query(sql, values, (err, result) => {
         if (err) {
             console.error('Error inserting data into MySQL:', err);
@@ -82,8 +83,8 @@ app.get('/api/getImages', (req, res) => {
                     ImageId: row.Image_id,
                     ImageType: row.ImageType,
                     Url: row.Url,
-                    ImagePlace :row.ImagePlace,
-                    DisplayPage:row.DisplayPage,
+                    ImagePlace: row.ImagePlace,
+                    DisplayPage: row.DisplayPage,
                 };
                 fieldsArray.push(fieldObject);
             });
@@ -162,31 +163,31 @@ app.get('/api/getCheckboxStatusImages/:Image_id', (req, res) => {
 
 //display in image preview page
 app.get('/api/getCheckedFieldsImages', (req, res) => {
-  const sql = 'SELECT * FROM user_images WHERE checkbox = 1';
+    const sql = 'SELECT * FROM user_images WHERE checkbox = 1';
 
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Error fetching checked fields from MySQL:', err);
-      res.status(500).json({ error: 'Internal server error' });
-    } else {
-      console.log('Checked fields retrieved from MySQL');
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching checked fields from MySQL:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        } else {
+            console.log('Checked fields retrieved from MySQL');
 
-      const checkedFieldsArray = [];
+            const checkedFieldsArray = [];
 
-      results.forEach((row) => {
-        const fieldObject = {
-            ImageId: row.Image_id,
-            ImageType: row.ImageType,
-            Url: row.Url,
-            ImagePlace :row.ImagePlace,
-            DisplayPage:row.DisplayPage,
-         
-        };
-        checkedFieldsArray.push(fieldObject);
-      });
-      res.status(200).json(checkedFieldsArray);
-    }
-  });
+            results.forEach((row) => {
+                const fieldObject = {
+                    ImageId: row.Image_id,
+                    ImageType: row.ImageType,
+                    Url: row.Url,
+                    ImagePlace: row.ImagePlace,
+                    DisplayPage: row.DisplayPage,
+
+                };
+                checkedFieldsArray.push(fieldObject);
+            });
+            res.status(200).json(checkedFieldsArray);
+        }
+    });
 });
 
 

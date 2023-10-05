@@ -1,65 +1,59 @@
-import React, { useState, useEffect} from "react";
-import './Images.css'; 
+import React, { useState, useEffect } from "react";
+import "./Images.css";
 import { Link } from "react-router-dom";
 import Header from "../AppHeader/Header";
 
 const Images = () => {
-    const [selectedImageType,setSelectedImageType]=useState("");
-    const [selectedImageUrl,setSelectedImageUrl]=useState("");
-    const [selectedDisplayPage,setSelectedDisplayPage]=useState("");
-    const [selectedPlace,setSelectedPlace]=useState("");
-    const [InputData, setInputData] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [checkboxStatus, setCheckboxStatus] = useState({});
-    
+  const [selectedImageType, setSelectedImageType] = useState("");
+  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
+  const [selectedDisplayPage, setSelectedDisplayPage] = useState("");
+  const [selectedPlace, setSelectedPlace] = useState("");
+  const [InputData, setInputData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [checkboxStatus, setCheckboxStatus] = useState({});
 
-
-// handle submit 
-const handleSubmitUrl = async (e) => {
+  // handle submit
+  const handleSubmitUrl = async (e) => {
     e.preventDefault();
 
-    const data = {
-      ImageType:selectedImageType,
-      Url: selectedImageUrl,
-      ImagePlace: selectedPlace,
-      DisplayPage: selectedDisplayPage
-    };
-// 
-    console.log("Data to be sent to the backend:", data);
+    // const data = {
+    //   ImageType:selectedImageType,
+    //   Url: selectedImageUrl,
+    //   ImagePlace: selectedPlace,
+    //   DisplayPage: selectedDisplayPage
+    // };
+    //
+
+    const formData = new FormData();
+    formData.append("ImageType", selectedImageType);
+    formData.append("image", selectedImageUrl);
+    formData.append("ImagePlace", selectedPlace);
+    formData.append("DisplayPage", selectedDisplayPage);
+
+    console.log("Data to be sent to the backend:", formData);
 
     try {
-      const response = await fetch(
-        "http://localhost:8086/api/postdataImage",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch("http://localhost:8086/api/postdataImage", {
+        method: "POST",
+        body: formData,
+      });
+      const responseData = await response.json();
 
-      if (response.status === 200) {
         alert("Image submitted successfully");
         setSelectedImageType("");
         setSelectedImageUrl("");
         setSelectedDisplayPage("");
         setSelectedPlace("");
-      } else {
-        alert("Error submitting Image");
-      }
+
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred while submitting data");
     }
   };
 
-
-
-
-//To handle the delete button
-const handleDelete = async (ImageId, ImageType) => {
+  //To handle the delete button
+  const handleDelete = async (ImageId, ImageType) => {
     const confirmDelete = window.confirm(
       `Are you sure you want to delete the "${ImageType}" image?`
     );
@@ -87,20 +81,13 @@ const handleDelete = async (ImageId, ImageType) => {
     }
   };
 
-
-
-
-
-
- useEffect(() => {
+  useEffect(() => {
     fetch("http://localhost:8086/api/getImages")
       .then((response) => response.json())
       .then((data) => {
         setIsLoading(false);
         console.log(data);
         setInputData(data);
-
-
 
         //checkbox function
         const initialCheckboxStatus = {};
@@ -130,8 +117,6 @@ const handleDelete = async (ImageId, ImageType) => {
       });
   }, []);
 
-
-
   //Handle the checkbox
   const handleCheckboxClick = async (ImageId) => {
     const newCheckboxStatus = {
@@ -149,7 +134,9 @@ const handleDelete = async (ImageId, ImageType) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ checkbox: newCheckboxStatus[ImageId] ? 1 : 0 }),
+          body: JSON.stringify({
+            checkbox: newCheckboxStatus[ImageId] ? 1 : 0,
+          }),
         }
       );
 
@@ -162,10 +149,6 @@ const handleDelete = async (ImageId, ImageType) => {
     }
   };
 
-
-
-
-
   return (
     <div>
       <Header />
@@ -175,33 +158,32 @@ const handleDelete = async (ImageId, ImageType) => {
         </center>
       </h1>
       <div className="container">
-         <form onSubmit={handleSubmitUrl} className="form-horizontal" encType="multipart/form-data">
-         <div className="form-group">
+        <form
+          onSubmit={handleSubmitUrl}
+          className="form-horizontal"
+          encType="multipart/form-data"
+        >
+          <div className="form-group">
             <label>Select the type:</label>
             <select
               id="image-type"
               name="image-type"
               onChange={(e) => setSelectedImageType(e.target.value)}
-              value={selectedImageType}
+              // value={selectedImageType}
             >
               <option value="" disabled>
                 Select the Type
               </option>
               <option value="Logo-image">Logo</option>
               <option value="Background-image">Background</option>
-
-              
             </select>
           </div>
           <div>
             <label>Link:</label>
             <input
               type="file"
-              id="image-url"
-              name="image-url"
-              placeholder="Enter the url"
-              value={selectedImageUrl}
-              onChange={(e) => setSelectedImageUrl(e.target.value)}
+
+              onChange={(e) => setSelectedImageUrl(e.target.files[0])}
               required
             />
           </div>
@@ -211,14 +193,14 @@ const handleDelete = async (ImageId, ImageType) => {
               id="logo-place"
               name="logo-place"
               onChange={(e) => setSelectedPlace(e.target.value)}
-              value={selectedPlace} >
+              value={selectedPlace}
+            >
               <option value="" disabled>
                 Select the logo place
               </option>
               <option value="left">Left</option>
               <option value="right">Right</option>
               <option value="center">Center</option>
-              
             </select>
           </div>
           <div>
@@ -227,26 +209,26 @@ const handleDelete = async (ImageId, ImageType) => {
               id="display-page"
               name="display-page"
               onChange={(e) => setSelectedDisplayPage(e.target.value)}
-              value={selectedDisplayPage} >
+              value={selectedDisplayPage}
+            >
               <option value="" disabled>
                 Select the Display page
               </option>
               <option value="login">Login</option>
               <option value="register">Register</option>
               <option value="webcast">Webcast</option>
-              
             </select>
           </div>
-        
+
           <div>
             <button className="submit-btn" type="submit">
               Submit
             </button>
           </div>
-          </form>
-        </div>
+        </form>
+      </div>
 
-        {/* To display */}
+      {/* To display */}
       {isLoading ? (
         <div>Loading...</div>
       ) : error ? (
@@ -254,36 +236,48 @@ const handleDelete = async (ImageId, ImageType) => {
       ) : (
         <div className="displaydata">
           {InputData.map((item) => (
-            <ul ><div key={item.id}>
-              <input
-                type="checkbox"
-                className="checkbox-enlarge"
-                checked={checkboxStatus[item.ImageId]}
-                onChange={() => handleCheckboxClick(item.ImageId)}
-              />
-              <li><b>ImageType:</b> {item.ImageType}</li>
-              <li><b>Url:</b> {item.Url}</li>
-              <li><b>Place:</b> {item.ImagePlace}</li>
-              <li><b>Displaying Page:</b> {item.DisplayPage}</li>
-              <div>
-                <button
-                  className="delete-btn"
-                  data-userid={item.ImageId}
-                  onClick={() => handleDelete(item.ImageId, item.ImageType)}>Delete</button>
+            <ul>
+              <div key={item.id}>
+                <input
+                  type="checkbox"
+                  className="checkbox-enlarge"
+                  checked={checkboxStatus[item.ImageId]}
+                  onChange={() => handleCheckboxClick(item.ImageId)}
+                />
+                <li>
+                  <b>ImageType:</b> {item.ImageType}
+                </li>
+                <li>
+                  <b>Url:</b> {item.Url}
+                </li>
+                <li>
+                  <b>Place:</b> {item.ImagePlace}
+                </li>
+                <li>
+                  <b>Displaying Page:</b> {item.DisplayPage}
+                </li>
+                <div>
+                  <button
+                    className="delete-btn"
+                    data-userid={item.ImageId}
+                    onClick={() => handleDelete(item.ImageId, item.ImageType)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-              </div>
-              </ul>))}
-              </div>
-              )}
-          
+            </ul>
+          ))}
+        </div>
+      )}
 
-        <div className="preview-page">
+      <div className="preview-page">
         <Link to="/ImagePreview">
           <button className="preview-btn">Preview</button>
         </Link>
       </div>
     </div>
   );
-}
+};
 
 export default Images;
