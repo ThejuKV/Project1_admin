@@ -179,12 +179,13 @@ const Images = () => {
             </select>
           </div>
           <div>
-            <label>Link:</label>
+            <label>Upload file:</label>
             <input
               type="file"
 
               onChange={(e) => setSelectedImageUrl(e.target.files[0])}
               required
+              // (e) => setSelectedImageUrl(e.target.value)
             />
           </div>
           <div>

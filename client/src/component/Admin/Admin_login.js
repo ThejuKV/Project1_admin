@@ -61,27 +61,6 @@ const Admin_login = () => {
     }
   };
 
-
-
-  // refresh
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch('http://localhost:8082/api/getfields');
-  //     if (response.status === 200) {
-  //       const data = await response.json();
-  //       setData(data);
-  //       setInputData(data);
-  //       setIsLoading(false);
-  //     } else {
-  //       throw new Error('Error fetching data');
-  //     }
-  //   } catch (error) {
-  //     setError(error);
-  //     setIsLoading(false);
-  //   }
-  // };
-
-//To handle the delete button
   const handleDelete = async (userID, label) => {
     const confirmDelete = window.confirm(`Are you sure you want to delete the "${label}"?`);
   

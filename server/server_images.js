@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const cors = require('cors');
 const app = express();
-const multer = require('multer');
+// const multer = require('multer');
 const port = 8086;
 const { v4: uuidv4 } = require('uuid');
 app.use(cors());
